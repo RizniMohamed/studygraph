@@ -9,7 +9,7 @@ export const createTS = async (data) => {
     }
 }
 
-export const getAllTS = async () => {
+export const getTS = async () => {
     try {
         const response = await API.get("timesheet")
         return response.data
@@ -17,17 +17,6 @@ export const getAllTS = async () => {
         throw error
     }
 }
-
-
-// export const getOneSheet = async (id) => {
-//     try {
-//         const response = await API.get(`timesheet/${id}`)
-//         return response.data
-//     } catch (error) {
-//         throw error
-//     }
-// }
-
 
 export const deleteTS = async (id) => {
     try {

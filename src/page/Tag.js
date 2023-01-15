@@ -12,6 +12,7 @@ const Tag = () => {
   const auth = useSelector(state => state.auth)
   const forceRefresh = useSelector(state => state.forceRefresh)
   const [list, setList] = useState(null)
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch()
 
   const onDelete = (tag) => {
@@ -72,10 +73,11 @@ const Tag = () => {
     (async () => {
       const response = await getTags(`userID=${auth.userID}`);
       if (response.status === 200) setList(response.data.tag);
+      if (response.status !== 200) setLoading(false);
     })();
   }, [forceRefresh.tag, auth.userID]);
 
-  if (!list) {
+  if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height="90vh">
         <Typography fontWeight={700} fontSize={28} >
@@ -85,10 +87,25 @@ const Tag = () => {
     )
   }
 
+  if (!loading && !list) {
+    return <>
+      <Box display="flex" justifyContent="center" alignItems="center" height="90vh">
+        <Typography fontWeight={700} fontSize={28} >
+          No tags created yet...
+        </Typography>
+      </Box>
+      <Fab
+        onClick={onAddClick}
+        sx={style_fab} >
+        <Add />
+      </Fab>
+    </>
+  }
+
   return (
     <Box>
       <List dense={false} sx={{ display: "flex", flexDirection: "column", alignItems: "center" }} >
-        {list && list.map((item, id) => {
+        {list.map((item, id) => {
           return <ListItem
             key={id}
             sx={{ bgcolor: "#DADADA", borderRadius: 0.2, mb: 0.5, width: "calc(100vw - 10px)" }}
@@ -117,13 +134,7 @@ const Tag = () => {
 
       <Fab
         onClick={onAddClick}
-        sx={{
-          bgcolor: "background.mainbg",
-          color: "white",
-          position: "fixed",
-          bottom: 16,
-          right: 16
-        }} >
+        sx={style_fab} >
         <Add />
       </Fab>
 
@@ -132,3 +143,11 @@ const Tag = () => {
 }
 
 export default Tag;
+
+const style_fab = {
+          bgcolor: "background.mainbg",
+          color: "white",
+          position: "fixed",
+          bottom: 16,
+          right: 16
+        }

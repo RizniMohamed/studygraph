@@ -3,7 +3,7 @@ import { Fab, IconButton, List, ListItem, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux'
-import { createTS, deleteTS, getAllTS, updateTS } from "../services/timesheet";
+import { createTS, deleteTS, getTS, updateTS } from "../services/timesheet";
 import { dialogActions } from "../Store/dialogSlice";
 import { forceRefreshActions } from "../Store/forceRefreshSlice";
 import { messageActions } from "../Store/messageSlice";
@@ -14,13 +14,15 @@ const Timesheet = () => {
   const dispatch = useDispatch()
   const auth = useSelector(state => state.auth)
   const forceRefresh = useSelector(state => state.forceRefresh)
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
-      const response = await getAllTS()
+      const response = await getTS(`userID=${auth.userID}`)
       if (response.status === 200) setList(response.data.timesheet)
+      if (response.status !== 200) setLoading(false);
     })()
-  }, [forceRefresh.timesheet])
+  }, [forceRefresh.timesheet,auth.userID])
 
   const onDelete = (id) => {
     dispatch(
@@ -92,7 +94,7 @@ const Timesheet = () => {
     )
   }
 
-  if (!list) {
+  if (!loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height="90vh">
         <Typography fontWeight={700} fontSize={28} >
@@ -100,6 +102,21 @@ const Timesheet = () => {
         </Typography>
       </Box>
     )
+  }
+
+  if (!loading && !list) {
+    return <>
+      <Box display="flex" justifyContent="center" alignItems="center" height="90vh">
+        <Typography fontWeight={700} fontSize={28} >
+          No tags created yet...
+        </Typography>
+      </Box>
+      <Fab
+        onClick={onAddClick}
+        sx={style_btnAdd} >
+        <Add />
+      </Fab>
+    </>
   }
 
   return (
