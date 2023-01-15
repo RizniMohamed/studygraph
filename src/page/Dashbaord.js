@@ -14,7 +14,7 @@ import { Line } from 'react-chartjs-2';
 import { Box, Button, TextField, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { messageActions } from '../Store/messageSlice';
 import { getLineChart } from '../services/dashboard';
 
@@ -51,22 +51,19 @@ const options = {
 
 const Dashboard = () => {
   const dispatch = useDispatch()
-
+  const auth = useSelector(state => state.auth)
   const [data, setData] = useState(undefined)
-
-  console.log(data);
 
   const onSubmit = async ({ start_date, end_date }) => {
     let start_date_days = new Date(start_date).getDate()
     let end_date_days = new Date(end_date).getDate()
 
     if (start_date_days < end_date_days) {
-      const res = await getLineChart({ start_date, end_date })
+      const res = await getLineChart({ start_date, end_date,userID : auth.userID })
       if (res.status === 200) setData(res.data)
     } else dispatch(messageActions.show(["Invalid dates", "error"]))
 
   }
-
 
   const formik = useFormik({
     initialValues: initVals,
