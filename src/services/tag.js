@@ -9,25 +9,14 @@ export const createTag = async (data) => {
     }
 }
 
-export const getAllTags = async () => {
+export const getTags = async (query) => {
     try {
-        const response = await API.get("tag")
+        const response = await API.get(`tag?${query}`);
         return response.data
     } catch (error) {
         throw error
     }
 }
-
-
-// export const getOneTag = async (id) => {
-//     try {
-//         const response = await API.get(`tag/${id}`)
-//         return response.data
-//     } catch (error) {
-//         throw error
-//     }
-// }
-
 
 export const deleteTags = async (id) => {
     try {

@@ -3,7 +3,7 @@ import { Avatar, Fab, IconButton, List, ListItem, ListItemAvatar, Typography } f
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux'
-import { createTag, deleteTags, getAllTags, updateTag } from "../services/tag";
+import { createTag, deleteTags, getTags, updateTag } from "../services/tag";
 import { dialogActions } from "../Store/dialogSlice";
 import { forceRefreshActions } from "../Store/forceRefreshSlice";
 import { messageActions } from "../Store/messageSlice";
@@ -53,7 +53,6 @@ const Tag = () => {
 
     dispatch(
       dialogActions.show(["tag", async (tag) => {
-        console.log(tag);
         const response = await updateTag({
           name: tag.name,
           color: tag.color,
@@ -71,10 +70,10 @@ const Tag = () => {
 
   useEffect(() => {
     (async () => {
-      const response = await getAllTags()
-      if (response.status === 200) setList(response.data.tag)
-    })()
-  }, [forceRefresh.tag])
+      const response = await getTags(`userID=${auth.userID}`);
+      if (response.status === 200) setList(response.data.tag);
+    })();
+  }, [forceRefresh.tag, auth.userID]);
 
   if (!list) {
     return (
