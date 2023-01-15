@@ -20,7 +20,7 @@ const Timesheet = () => {
     (async () => {
       const response = await getTS(`userID=${auth.userID}`)
       if (response.status === 200) setList(response.data.timesheet)
-      if (response.status !== 200) setLoading(false);
+      setLoading(false);
     })()
   }, [forceRefresh.timesheet,auth.userID])
 
@@ -94,7 +94,7 @@ const Timesheet = () => {
     )
   }
 
-  if (!loading) {
+  if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height="90vh">
         <Typography fontWeight={700} fontSize={28} >

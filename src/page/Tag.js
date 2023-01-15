@@ -73,7 +73,7 @@ const Tag = () => {
     (async () => {
       const response = await getTags(`userID=${auth.userID}`);
       if (response.status === 200) setList(response.data.tag);
-      if (response.status !== 200) setLoading(false);
+       setLoading(false);
     })();
   }, [forceRefresh.tag, auth.userID]);
 

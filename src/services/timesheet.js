@@ -9,9 +9,9 @@ export const createTS = async (data) => {
     }
 }
 
-export const getTS = async () => {
+export const getTS = async (query) => {
     try {
-        const response = await API.get("timesheet")
+        const response = await API.get(`timesheet?${query}`)
         return response.data
     } catch (error) {
         throw error
