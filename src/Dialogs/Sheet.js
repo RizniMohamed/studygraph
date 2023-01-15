@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
-import { getAllTags } from '../services/tag';
+import { getTags } from '../services/tag';
 import { dialogActions } from '../Store/dialogSlice';
 
 const initVals = {
@@ -25,6 +25,7 @@ const Sheet = () => {
   const { status, onSubmit, data } = useSelector(state => state.dialog.timesheet)
   const dispatch = useDispatch()
   const [tags, setTags] = useState(undefined)
+  const auth = useSelector((state) => state.auth);
 
   const formik = useFormik({
     initialValues: initVals,
@@ -62,7 +63,7 @@ const Sheet = () => {
   }
 
   useEffect(() => {
-    (async () => { setTags((await getAllTags()).data.tag) })()
+    (async () => { setTags((await getTags(`userID=${auth.userID}`)).data.tag) })()
     if (data) {
       formik.values.date = data.ts.date
       formik.values.start_time = data.ts.start_time
